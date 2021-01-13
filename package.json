@@ -1,0 +1,20 @@
+{
+  "name": "wheel",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "file-saver": "^2.0.5"
+  },
+  "devDependencies": {
+    "parcel-plugin-nuke-dist": "^1.0.1"
+  }
+}
