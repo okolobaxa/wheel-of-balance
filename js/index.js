@@ -10,12 +10,16 @@ export default class Wheel {
     constructor(canvas, config) {
         this.canvas = canvas;
         this.config = config;
+
         this.step = config.radius / config.levels;
         this.degreesPerSegment = 360 / config.segments.length;
         this.radiansPerSegment = this.degreesPerSegment / 180 * Math.PI;
+        this.data = config.segments.map(s => ({
+            level: s.level
+        }));
 
         this.canvas.onmousedown = event => this.setLevel(canvas, event);
-        this.canvas.onmousemove = event => this.onmove(event);
+        //this.canvas.onmousemove = event => this.onmove(event);
     }
 
     draw = function () {
@@ -33,6 +37,19 @@ export default class Wheel {
     };
 
     clear = function () {
+        this.data = config.segments.map(s => ({
+            level: s.level || this.config.levels
+        }));
+
+        this.redraw();
+    };
+
+    redraw() {
+        this.clean();
+        this.draw();
+    };
+
+    clean() {
         const context = this.canvas.getContext('2d');
 
         context.beginPath();
@@ -40,8 +57,6 @@ export default class Wheel {
         context.fillStyle = "white";
         context.fillRect(0, 0, canvas.width, canvas.height);
         context.closePath();
-
-        this.draw();
     };
 
     drawSegments(ctx, segments, radiansPerSegment, step) {
@@ -51,8 +66,9 @@ export default class Wheel {
             const endAngle = startAngle + radiansPerSegment;
 
             const segment = segments[i];
+            const dataItem = this.data[i];
 
-            this.drawSegment(ctx, step * segment.level, startAngle, endAngle, segment.color);
+            this.drawSegment(ctx, step * dataItem.level, startAngle, endAngle, segment.color);
         }
     };
 
@@ -118,11 +134,13 @@ export default class Wheel {
 
         const degrees = this.calculateLineAngel(dx, dy);
         const segmentId = Math.floor(degrees / this.degreesPerSegment);
-        let segment = this.config.segments[segmentId];
+        let dataItem = this.data[segmentId];
 
         const pointRadius = Math.sqrt(dx * dx + dy * dy);
         const length = Math.min(pointRadius, this.config.radius);
-        segment.level = length / this.step;
+        dataItem.level = length / this.step;
+
+        this.redraw();
     };
 
     calculateLineEnd(canvas, e) {
@@ -134,7 +152,7 @@ export default class Wheel {
             dx: x - 250,
             dy: y - 250,
         };
-    }
+    };
 
     onmove(e) {
         const {
@@ -147,24 +165,25 @@ export default class Wheel {
             //return;
         }
 
-        this.clear();
+        this.redraw();
 
         const degrees = this.calculateLineAngel(dx, dy);
         const segmentId = Math.floor(degrees / this.degreesPerSegment);
         let segment = this.config.segments[segmentId];
+        let data = this.data[segmentId];
 
         const ctx = this.canvas.getContext('2d');
-
-        const startAngle = segmentId * this.radiansPerSegment;
-        const endAngle = startAngle + this.radiansPerSegment;
-        this.drawSegment(ctx, this.step * segment.level, startAngle, endAngle, 'white');
 
         const color = this.hexToRgbA(segment.color, 1);
         const length = Math.min(cursorPointRadius, this.config.radius);
         this.drawSegment(ctx, length, startAngle, endAngle, color);
 
+        const startAngle = segmentId * this.radiansPerSegment;
+        const endAngle = startAngle + this.radiansPerSegment;
+        const opacityColor = this.hexToRgbA(segment.color, 0.5);
+        this.drawSegment(ctx, this.step * data.level, startAngle, endAngle, opacityColor);
+
         this.drawCircles(ctx, this.config.levels, this.step, this.config.segments.length);
-        this.drawTexts(ctx, this.config.segments, this.radiansPerSegment, this.config.radius);
     };
 
     calculateLineAngel(dx, dy) {

@@ -460,8 +460,8 @@ require('./text-to-arc.js');
 require('./canvas-toBlob.js');
 
 var Wheel = /*#__PURE__*/function () {
-  function Wheel(_canvas, config) {
-    var _this = this;
+  function Wheel(canvas, _config) {
+    var _this2 = this;
 
     _classCallCheck(this, Wheel);
 
@@ -479,38 +479,58 @@ var Wheel = /*#__PURE__*/function () {
     });
 
     _defineProperty(this, "clear", function () {
+      var _this = this;
+
+      this.data = config.segments.map(function (s) {
+        return {
+          level: s.level || _this.config.levels
+        };
+      });
+      this.redraw();
+    });
+
+    this.canvas = canvas;
+    this.config = _config;
+    this.step = _config.radius / _config.levels;
+    this.degreesPerSegment = 360 / _config.segments.length;
+    this.radiansPerSegment = this.degreesPerSegment / 180 * Math.PI;
+    this.data = _config.segments.map(function (s) {
+      return {
+        level: s.level
+      };
+    });
+
+    this.canvas.onmousedown = function (event) {
+      return _this2.setLevel(canvas, event);
+    }; //this.canvas.onmousemove = event => this.onmove(event);
+
+  }
+
+  _createClass(Wheel, [{
+    key: "redraw",
+    value: function redraw() {
+      this.clean();
+      this.draw();
+    }
+  }, {
+    key: "clean",
+    value: function clean() {
       var context = this.canvas.getContext('2d');
       context.beginPath();
       context.clearRect(0, 0, canvas.width, canvas.height);
       context.fillStyle = "white";
       context.fillRect(0, 0, canvas.width, canvas.height);
       context.closePath();
-      this.draw();
-    });
-
-    this.canvas = _canvas;
-    this.config = config;
-    this.step = config.radius / config.levels;
-    this.degreesPerSegment = 360 / config.segments.length;
-    this.radiansPerSegment = this.degreesPerSegment / 180 * Math.PI;
-
-    this.canvas.onmousedown = function (event) {
-      return _this.setLevel(_canvas, event);
-    };
-
-    this.canvas.onmousemove = function (event) {
-      return _this.onmove(event);
-    };
-  }
-
-  _createClass(Wheel, [{
+    }
+  }, {
     key: "drawSegments",
     value: function drawSegments(ctx, segments, radiansPerSegment, step) {
       for (var i = 0; i < segments.length; i++) {
         var startAngle = i * radiansPerSegment;
         var endAngle = startAngle + radiansPerSegment;
         var segment = segments[i];
-        this.drawSegment(ctx, step * segment.level, startAngle, endAngle, segment.color);
+        var dataItem = this.data[i];
+        this.drawSegment(ctx, step * dataItem.level, startAngle, endAngle, segment.color);
       }
     }
   }, {
@@ -574,10 +594,11 @@ var Wheel = /*#__PURE__*/function () {
 
       var degrees = this.calculateLineAngel(dx, dy);
       var segmentId = Math.floor(degrees / this.degreesPerSegment);
-      var segment = this.config.segments[segmentId];
+      var dataItem = this.data[segmentId];
       var pointRadius = Math.sqrt(dx * dx + dy * dy);
       var length = Math.min(pointRadius, this.config.radius);
-      segment.level = length / this.step;
+      dataItem.level = length / this.step;
+      this.redraw();
     }
   }, {
     key: "calculateLineEnd",
@@ -602,19 +623,20 @@ var Wheel = /*#__PURE__*/function () {
       if (cursorPointRadius >= this.config.radius) {//return;
       }
 
-      this.clear();
+      this.redraw();
       var degrees = this.calculateLineAngel(dx, dy);
       var segmentId = Math.floor(degrees / this.degreesPerSegment);
       var segment = this.config.segments[segmentId];
+      var data = this.data[segmentId];
       var ctx = this.canvas.getContext('2d');
-      var startAngle = segmentId * this.radiansPerSegment;
-      var endAngle = startAngle + this.radiansPerSegment;
-      this.drawSegment(ctx, this.step * segment.level, startAngle, endAngle, 'white');
       var color = this.hexToRgbA(segment.color, 1);
       var length = Math.min(cursorPointRadius, this.config.radius);
       this.drawSegment(ctx, length, startAngle, endAngle, color);
+      var startAngle = segmentId * this.radiansPerSegment;
+      var endAngle = startAngle + this.radiansPerSegment;
+      var opacityColor = this.hexToRgbA(segment.color, 0.5);
+      this.drawSegment(ctx, this.step * data.level, startAngle, endAngle, opacityColor);
       this.drawCircles(ctx, this.config.levels, this.step, this.config.segments.length);
-      this.drawTexts(ctx, this.config.segments, this.radiansPerSegment, this.config.radius);
     }
   }, {
     key: "calculateLineAngel",
@@ -652,7 +674,7 @@ var Wheel = /*#__PURE__*/function () {
 
 exports.default = Wheel;
 window.Wheel = Wheel;
-},{"file-saver":"node_modules/file-saver/dist/FileSaver.min.js","./text-to-arc.js":"js/text-to-arc.js","./canvas-toBlob.js":"js/canvas-toBlob.js"}],"../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"file-saver":"node_modules/file-saver/dist/FileSaver.min.js","./text-to-arc.js":"js/text-to-arc.js","./canvas-toBlob.js":"js/canvas-toBlob.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -680,7 +702,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49481" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "55017" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -856,5 +878,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../../../../../usr/local/lib/node_modules/parcel-bundler/src/builtins/hmr-runtime.js","js/index.js"], null)
+},{}]},{},["node_modules/parcel-bundler/src/builtins/hmr-runtime.js","js/index.js"], null)
 //# sourceMappingURL=/js.00a46daa.js.map
