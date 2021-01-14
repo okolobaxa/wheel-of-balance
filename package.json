@@ -1,15 +1,18 @@
 {
   "name": "wheel",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.9.1",
+  "description": "Draw configurable wheel of balance",
   "main": "index.js",
   "scripts": {
     "dev": "parcel index.html",
     "build": "parcel build index.html"
   },
-  "type": "module",
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "wheel of balance", 
+    "chart"
+  ],
+  "author": "Anton Kheistver <okolobaxa@gmail.com>",
+  "repository": "okolobaxa/wheel-of-balance",
   "license": "MIT",
   "dependencies": {
     "file-saver": "^2.0.5"

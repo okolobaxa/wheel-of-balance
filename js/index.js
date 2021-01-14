@@ -7,19 +7,44 @@ require('./canvas-toBlob.js');
 
 export default class Wheel {
 
+    defaultConfig = {
+        radius: 200,
+        levels: 10,
+        segments: [{
+                color: "#97CC64",
+                text: "Section 1",
+                level: 10
+            },
+            {
+                color: "#4569BC",
+                text: "Section 2",
+                level: 10
+            },
+            {
+                color: "#A955B8",
+                text: "Section 3",
+                level: 10
+            }
+        ]
+    };
+
     constructor(canvas, config) {
         this.canvas = canvas;
-        this.config = config;
+        
+        if (config) {
+            this.config = config;
+        } else {
+            this.config = this.defaultConfig;
+        }
 
-        this.step = config.radius / config.levels;
-        this.degreesPerSegment = 360 / config.segments.length;
+        this.step = this.config.radius / this.config.levels;
+        this.degreesPerSegment = 360 / this.config.segments.length;
         this.radiansPerSegment = this.degreesPerSegment / 180 * Math.PI;
-        this.data = config.segments.map(s => ({
+        this.data = this.config.segments.map(s => ({
             level: s.level
         }));
 
         this.canvas.onmousedown = event => this.setLevel(canvas, event);
-        //this.canvas.onmousemove = event => this.onmove(event);
     }
 
     draw = function () {
@@ -152,38 +177,6 @@ export default class Wheel {
             dx: x - 250,
             dy: y - 250,
         };
-    };
-
-    onmove(e) {
-        const {
-            dx,
-            dy
-        } = this.calculateLineEnd(canvas, e);
-        const cursorPointRadius = Math.sqrt(dx * dx + dy * dy);
-
-        if (cursorPointRadius >= this.config.radius) {
-            //return;
-        }
-
-        this.redraw();
-
-        const degrees = this.calculateLineAngel(dx, dy);
-        const segmentId = Math.floor(degrees / this.degreesPerSegment);
-        let segment = this.config.segments[segmentId];
-        let data = this.data[segmentId];
-
-        const ctx = this.canvas.getContext('2d');
-
-        const color = this.hexToRgbA(segment.color, 1);
-        const length = Math.min(cursorPointRadius, this.config.radius);
-        this.drawSegment(ctx, length, startAngle, endAngle, color);
-
-        const startAngle = segmentId * this.radiansPerSegment;
-        const endAngle = startAngle + this.radiansPerSegment;
-        const opacityColor = this.hexToRgbA(segment.color, 0.5);
-        this.drawSegment(ctx, this.step * data.level, startAngle, endAngle, opacityColor);
-
-        this.drawCircles(ctx, this.config.levels, this.step, this.config.segments.length);
     };
 
     calculateLineAngel(dx, dy) {
