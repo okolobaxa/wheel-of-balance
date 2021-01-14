@@ -29,8 +29,12 @@ export default class Wheel {
     };
 
     constructor(canvas, config) {
+        if (!(canvas instanceof HTMLCanvasElement)) {
+            throw "First argument should be of type HTMLCanvasElement";
+         }
+
         this.canvas = canvas;
-        
+
         if (config) {
             this.config = config;
         } else {
@@ -62,7 +66,7 @@ export default class Wheel {
     };
 
     clear = function () {
-        this.data = config.segments.map(s => ({
+        this.data = this.config.segments.map(s => ({
             level: s.level || this.config.levels
         }));
 
