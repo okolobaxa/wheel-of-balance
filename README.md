@@ -2,7 +2,7 @@
 
 <img src="https://raw.githubusercontent.com/okolobaxa/wheel-of-balance/master/img/wheel-of-balance.jpg"  alt="Demo" width="300" height="300">
 
-A small lib for drawing [wheel of balance](https://medium.com/thrive-global/how-does-one-become-centered-and-balanced-bb28627a4461). 
+A small lib for drawing configurable [wheel of balance](https://medium.com/thrive-global/how-does-one-become-centered-and-balanced-bb28627a4461). 
 
 Demo https://trusting-dijkstra-93d87f.netlify.app/
 
@@ -22,7 +22,7 @@ config.segments = [
     { color: "#A955B8", text: "Section 8" }
 ];
 
-config.radius = 200; // optional. Default calculated based in canvas size
+config.radius = 200; // optional. Default calculated based on canvas dimensions
 config.levels = 10; // optional. Default 10
 config.fontSize = 15; // optional. Default 15px
 
