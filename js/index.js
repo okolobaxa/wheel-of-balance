@@ -3,7 +3,6 @@ import {
 } from 'file-saver';
 
 require('./text-to-arc.js');
-require('./canvas-toBlob.js');
 
 export default class Wheel {
 
@@ -39,18 +38,15 @@ export default class Wheel {
         if (config) {
             this.config = config;
 
-            if (!this.config.fontSize)
-            {
+            if (!this.config.fontSize) {
                 this.config.fontSize = this.defaultConfig.fontSize;
             }
 
-            if (!this.config.radius)
-            {
+            if (!this.config.radius) {
                 this.config.radius = this.defaultConfig.radius;
             }
 
-            if (!this.config.levels)
-            {
+            if (!this.config.levels) {
                 this.config.levels = this.defaultConfig.levels;
             }
         } else {
@@ -135,7 +131,7 @@ export default class Wheel {
 
     drawTexts(ctx, center, segments, radiansPerSegment, radius, fontSize) {
         for (var i = 0; i < segments.length; i++) {
-            
+
             const segment = segments[i];
 
             const startAngle = i * radiansPerSegment;
@@ -143,8 +139,7 @@ export default class Wheel {
             let centerAngel = (startAngle + endAngle) / 2;
 
             const textAngularWidth = ctx.measureCircleText(segment.text, radius).angularWidth;
-            if (centerAngel >= Math.PI)
-            {
+            if (centerAngel >= Math.PI) {
                 centerAngel -= textAngularWidth / 2;
             } else {
                 centerAngel += textAngularWidth / 2;
@@ -153,7 +148,7 @@ export default class Wheel {
             ctx.beginPath();
             ctx.moveTo(center.x, center.y);
             ctx.fillStyle = segment.color;
-            ctx.fillCircleText(segment.text, center.x, center.y, radius + fontSize/1.5, centerAngel);
+            ctx.fillCircleText(segment.text, center.x, center.y, radius + fontSize / 1.5, centerAngel);
 
             ctx.fill();
             ctx.closePath();

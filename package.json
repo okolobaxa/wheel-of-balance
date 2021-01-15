@@ -1,20 +1,20 @@
 {
-  "name": "wheel",
+  "name": "wheel-of-balance",
   "version": "0.9.1",
   "description": "Draw configurable wheel of balance",
-  "main": "index.js",
   "scripts": {
     "dev": "parcel index.html",
-    "build": "parcel build index.html"
+    "build": "parcel build ./js/index.js --out-dir ./dist"
   },
   "keywords": [
-    "wheel of balance", 
+    "wheel of balance",
     "chart"
   ],
   "author": "Anton Kheistver <okolobaxa@gmail.com>",
   "repository": "okolobaxa/wheel-of-balance",
   "license": "MIT",
   "dependencies": {
+    "blueimp-canvas-to-blob": "^3.28.0",
     "file-saver": "^2.0.5"
   },
   "devDependencies": {
