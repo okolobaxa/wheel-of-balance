@@ -2,7 +2,7 @@
     const FILL = 0;        // const to indicate filltext render
     const STROKE = 1;
     var renderType = FILL; // used internal to set fill or stroke text
-    const multiplyCurrentTransform = true; // if true Use current transform when rendering
+    const multiplyCurrentTransform = false; // if true Use current transform when rendering
     // if false use absolute coordinates which is a little quicker
     // after render the currentTransform is restored to default transform
 

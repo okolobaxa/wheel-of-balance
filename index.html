@@ -19,6 +19,7 @@
 
     config.radius = 200;
     config.levels = 10;
+    config.fontSize = 25;
     config.segments = [
         { color: "#97CC64", text: "Section 1", level: config.levels },
         { color: "#4569BC", text: "Section 2", level: config.levels },
@@ -30,17 +31,17 @@
         { color: "#A955B8", text: "Section 8", level: config.levels }
     ];
 
-    var canvas = document.getElementById("canvas");
+    let canvas = document.getElementById("canvas");
 
-    var wheel = new Wheel(canvas, config);
+    const wheel = new Wheel(canvas, config);
     wheel.draw();
 
-    var clearButton = document.getElementById("clear");
+    const clearButton = document.getElementById("clear");
     clearButton.addEventListener('click', function (e) {
         wheel.clear();
     });
 
-    var downloadButton = document.getElementById("download");
+    const downloadButton = document.getElementById("download");
     downloadButton.addEventListener('click', function (e) {
         wheel.download();
     });

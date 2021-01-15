@@ -130,7 +130,7 @@ var global = arguments[3];
   var STROKE = 1;
   var renderType = FILL; // used internal to set fill or stroke text
 
-  var multiplyCurrentTransform = true; // if true Use current transform when rendering
+  var multiplyCurrentTransform = false; // if true Use current transform when rendering
   // if false use absolute coordinates which is a little quicker
   // after render the currentTransform is restored to default transform
   // measure circle text
@@ -468,6 +468,7 @@ var Wheel = /*#__PURE__*/function () {
     _defineProperty(this, "defaultConfig", {
       radius: 200,
       levels: 10,
+      fontSize: 15,
       segments: [{
         color: "#97CC64",
         text: "Section 1",
@@ -485,9 +486,13 @@ var Wheel = /*#__PURE__*/function () {
 
     _defineProperty(this, "draw", function () {
       var ctx = this.canvas.getContext('2d');
-      this.drawSegments(ctx, this.config.segments, this.radiansPerSegment, this.step);
-      this.drawCircles(ctx, this.config.levels, this.step, this.config.segments.length);
-      this.drawTexts(ctx, this.config.segments, this.radiansPerSegment, this.config.radius);
+      this.canvas.style.font = ctx.font;
+      this.canvas.style.fontSize = this.config.fontSize + "px";
+      ctx.font = this.canvas.style.font;
+      ctx.textBaseline = "middle";
+      this.drawSegments(ctx, this.config.center, this.config.segments, this.radiansPerSegment, this.step);
+      this.drawCircles(ctx, this.config.center, this.config.levels, this.step, this.config.segments.length);
+      this.drawTexts(ctx, this.config.center, this.config.segments, this.radiansPerSegment, this.config.radius, this.config.fontSize);
     });
 
     _defineProperty(this, "download", function () {
@@ -515,10 +520,30 @@ var Wheel = /*#__PURE__*/function () {
 
     if (config) {
       this.config = config;
+
+      if (!this.config.fontSize) {
+        this.config.fontSize = this.defaultConfig.fontSize;
+      }
+
+      if (!this.config.radius) {
+        this.config.radius = this.defaultConfig.radius;
+      }
+
+      if (!this.config.levels) {
+        this.config.levels = this.defaultConfig.levels;
+      }
     } else {
       this.config = this.defaultConfig;
     }
 
+    var width = canvas.width;
+    var height = canvas.height;
+    this.config.center = {
+      x: width / 2,
+      y: height / 2
+    };
+    var maxRadius = Math.min(width, height) / 2 - this.config.fontSize;
+    this.config.radius = Math.min(this.config.radius, maxRadius);
     this.step = this.config.radius / this.config.levels;
     this.degreesPerSegment = 360 / this.config.segments.length;
     this.radiansPerSegment = this.degreesPerSegment / 180 * Math.PI;
@@ -551,71 +576,81 @@ var Wheel = /*#__PURE__*/function () {
     }
   }, {
     key: "drawSegments",
-    value: function drawSegments(ctx, segments, radiansPerSegment, step) {
+    value: function drawSegments(ctx, center, segments, radiansPerSegment, step) {
       for (var i = 0; i < segments.length; i++) {
         var startAngle = i * radiansPerSegment;
         var endAngle = startAngle + radiansPerSegment;
         var segment = segments[i];
         var dataItem = this.data[i];
-        this.drawSegment(ctx, step * dataItem.level, startAngle, endAngle, segment.color);
+        this.drawSegment(ctx, center, step * dataItem.level, startAngle, endAngle, segment.color);
       }
     }
   }, {
     key: "drawTexts",
-    value: function drawTexts(ctx, segments, radiansPerSegment, radius) {
+    value: function drawTexts(ctx, center, segments, radiansPerSegment, radius, fontSize) {
       for (var i = 0; i < segments.length; i++) {
+        var segment = segments[i];
         var startAngle = i * radiansPerSegment;
         var endAngle = startAngle + radiansPerSegment;
-        var center = (startAngle + endAngle) / 2;
-        var segment = segments[i];
+        var centerAngel = (startAngle + endAngle) / 2;
+        var textAngularWidth = ctx.measureCircleText(segment.text, radius).angularWidth;
+
+        if (centerAngel >= Math.PI) {
+          centerAngel -= textAngularWidth / 2;
+        } else {
+          centerAngel += textAngularWidth / 2;
+        }
+
         ctx.beginPath();
-        ctx.moveTo(250, 250);
+        ctx.moveTo(center.x, center.y);
         ctx.fillStyle = segment.color;
-        ctx.fillCircleText(segment.text, 250, 250, radius + 10, center, null);
+        ctx.fillCircleText(segment.text, center.x, center.y, radius + fontSize / 1.5, centerAngel);
         ctx.fill();
         ctx.closePath();
       }
     }
   }, {
     key: "drawSegment",
-    value: function drawSegment(ctx, radius, startAngle, endAngle, color) {
+    value: function drawSegment(ctx, center, radius, startAngle, endAngle, color) {
       ctx.beginPath();
-      ctx.moveTo(250, 250);
-      ctx.arc(250, 250, radius, startAngle, endAngle, false);
+      ctx.moveTo(center.x, center.y);
+      ctx.arc(center.x, center.y, radius, startAngle, endAngle, false);
       ctx.fillStyle = color;
       ctx.fill();
       ctx.closePath();
     }
   }, {
     key: "drawCircles",
-    value: function drawCircles(ctx, levels, step, segmentsCount) {
+    value: function drawCircles(ctx, center, levels, step, segmentsCount) {
+      for (var i = 1; i <= segmentsCount; i++) {
+        var radians = i * (360 / segmentsCount) / 180 * Math.PI;
+        var endX = center.x + levels * step * Math.cos(radians);
+        var endY = center.y - levels * step * Math.sin(radians);
+        ctx.beginPath();
+        ctx.moveTo(center.x, center.y);
+        ctx.lineTo(endX, endY);
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        ctx.closePath();
+      }
+
       var currentR = step;
 
-      for (var i = 0; i < levels; i++) {
+      for (var _i = 0; _i < levels; _i++) {
         ctx.beginPath();
-        ctx.arc(250, 250, currentR, 0, 2 * Math.PI);
-        ctx.strokeStyle = "#000000";
+        ctx.arc(center.x, center.y, currentR, 0, 2 * Math.PI);
+        ctx.strokeStyle = "#808080";
+        ctx.lineWidth = 1;
         ctx.stroke();
         ctx.closePath();
         currentR += step;
-      }
-
-      for (var _i = 1; _i <= segmentsCount; _i++) {
-        var radians = _i * (360 / segmentsCount) / 180 * Math.PI;
-        var endX = 250 + levels * step * Math.cos(radians);
-        var endY = 250 - levels * step * Math.sin(radians);
-        ctx.beginPath();
-        ctx.moveTo(250, 250);
-        ctx.lineTo(endX, endY);
-        ctx.strokeStyle = "#000000";
-        ctx.stroke();
-        ctx.closePath();
       }
     }
   }, {
     key: "setLevel",
     value: function setLevel(canvas, e) {
-      var _this$calculateLineEn = this.calculateLineEnd(canvas, e),
+      var _this$calculateLineEn = this.calculateLineEnd(canvas, this.config.center, e),
           dx = _this$calculateLineEn.dx,
           dy = _this$calculateLineEn.dy;
 
@@ -629,13 +664,13 @@ var Wheel = /*#__PURE__*/function () {
     }
   }, {
     key: "calculateLineEnd",
-    value: function calculateLineEnd(canvas, e) {
+    value: function calculateLineEnd(canvas, center, e) {
       var rect = canvas.getBoundingClientRect();
       var x = e.clientX - rect.left;
       var y = e.clientY - rect.top;
       return {
-        dx: x - 250,
-        dy: y - 250
+        dx: x - center.x,
+        dy: y - center.y
       };
     }
   }, {
@@ -648,24 +683,6 @@ var Wheel = /*#__PURE__*/function () {
       if (1 / radians < 0) radians += 2 * Math.PI; // fixed, in [+0, 2 pi]
 
       return radians * 180 / Math.PI;
-    }
-  }, {
-    key: "hexToRgbA",
-    value: function hexToRgbA(hex, opacity) {
-      var c;
-
-      if (/^#([A-Fa-f0-9]{3}){1,2}$/.test(hex)) {
-        c = hex.substring(1).split('');
-
-        if (c.length == 3) {
-          c = [c[0], c[0], c[1], c[1], c[2], c[2]];
-        }
-
-        c = '0x' + c.join('');
-        return 'rgba(' + [c >> 16 & 255, c >> 8 & 255, c & 255].join(',') + ',' + opacity + ')';
-      }
-
-      throw new Error('Bad Hex');
     }
   }]);
 
@@ -702,7 +719,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "52939" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63182" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
