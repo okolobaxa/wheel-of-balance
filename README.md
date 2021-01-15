@@ -1,8 +1,8 @@
-# Wheel of balance
+# Wheel of balance [![npm][npm]][npm-url]
 
 <img src="https://raw.githubusercontent.com/okolobaxa/wheel-of-balance/master/img/wheel-of-balance.jpg"  alt="Demo" width="300" height="300">
 
-A small lib for drawing [wheel of balance](https://medium.com/thrive-global/how-does-one-become-centered-and-balanced-bb28627a4461). 
+A small lib for drawing configurable [wheel of balance](https://medium.com/thrive-global/how-does-one-become-centered-and-balanced-bb28627a4461). 
 
 Demo https://trusting-dijkstra-93d87f.netlify.app/
 
@@ -22,7 +22,7 @@ config.segments = [
     { color: "#A955B8", text: "Section 8" }
 ];
 
-config.radius = 200; // optional. Default calculated based in canvas size
+config.radius = 200; // optional. Default calculated based on canvas dimensions
 config.levels = 10; // optional. Default 10
 config.fontSize = 15; // optional. Default 15px
 
@@ -47,3 +47,6 @@ downloadButton.addEventListener('click', function (e) {
   <img src="https://static.tildacdn.com/tild3334-6466-4734-b431-373632616332/logo_transparent.png"
        alt="Sponsored by Psprto" width="100" height="100">
 </a>
+
+[npm]: https://img.shields.io/npm/v/wheel-of-balance.svg
+[npm-url]: https://npmjs.com/package/wheel-of-balance
