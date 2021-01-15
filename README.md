@@ -1,5 +1,4 @@
-# Wheel of balance
-[![npm][npm]][npm-url]
+# Wheel of balance [![npm][npm]][npm-url]
 
 <img src="https://raw.githubusercontent.com/okolobaxa/wheel-of-balance/master/img/wheel-of-balance.jpg"  alt="Demo" width="300" height="300">
 
