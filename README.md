@@ -3,6 +3,7 @@
 <img src="https://raw.githubusercontent.com/okolobaxa/wheel-of-balance/master/img/wheel-of-balance.jpg" align="right" alt="Demo" width="300" height="300">
 
 A small lib for drawing [wheel of balance](https://medium.com/thrive-global/how-does-one-become-centered-and-balanced-bb28627a4461). 
+
 Demo https://trusting-dijkstra-93d87f.netlify.app/
 
 ## Usage
