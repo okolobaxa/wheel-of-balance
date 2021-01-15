@@ -1,4 +1,5 @@
 # Wheel of balance
+[![npm][npm]][npm-url]
 
 <img src="https://raw.githubusercontent.com/okolobaxa/wheel-of-balance/master/img/wheel-of-balance.jpg"  alt="Demo" width="300" height="300">
 
@@ -47,3 +48,6 @@ downloadButton.addEventListener('click', function (e) {
   <img src="https://static.tildacdn.com/tild3334-6466-4734-b431-373632616332/logo_transparent.png"
        alt="Sponsored by Psprto" width="100" height="100">
 </a>
+
+[npm]: https://img.shields.io/npm/v/wheel-of-balance.svg
+[npm-url]: https://npmjs.com/package/wheel-of-balance
