@@ -9,8 +9,8 @@
 
 <body>
     <canvas id="canvas" width="500" height="500"></canvas>
-    <button id="clear">Clear</button>
-    <button id="download">Download</button>
+    <button onclick="javascript:wheel.clear()">Clear</button>
+    <button onclick="javascript:wheel.download()">Download</button>
 </body>
 
 <script>
@@ -21,8 +21,8 @@
     config.levels = 10;
     config.fontSize = 25;
     config.segments = [
-        { color: "#97CC64", text: "Section 1" },
-        { color: "#4569BC", text: "Section 2", level: 5 },
+        { color: "#97CC64", text: "Section 1", level: config.levels },
+        { color: "#4569BC", text: "Section 2", level: config.levels },
         { color: "#2A8341", text: "Section 3", level: config.levels },
         { color: "#F68D38", text: "Section 4", level: config.levels },
         { color: "#EA527F", text: "Section 5", level: config.levels },
@@ -35,16 +35,6 @@
 
     const wheel = new Wheel(canvas, config);
     wheel.draw();
-
-    const clearButton = document.getElementById("clear");
-    clearButton.addEventListener('click', function (e) {
-        wheel.clear();
-    });
-
-    const downloadButton = document.getElementById("download");
-    downloadButton.addEventListener('click', function (e) {
-        wheel.download();
-    });
 
 </script>
 
