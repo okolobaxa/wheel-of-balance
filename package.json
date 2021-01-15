@@ -9,7 +9,8 @@
   },
   "keywords": [
     "wheel of balance",
-    "chart"
+    "chart",
+    "canvas"
   ],
   "author": "Anton Kheistver <okolobaxa@gmail.com>",
   "repository": "okolobaxa/wheel-of-balance",
