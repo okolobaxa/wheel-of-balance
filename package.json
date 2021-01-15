@@ -4,7 +4,8 @@
   "description": "Draw configurable wheel of balance",
   "scripts": {
     "dev": "parcel index.html",
-    "build": "parcel build ./js/index.js --out-dir ./dist"
+    "build": "parcel build ./js/index.js --out-dir ./dist",
+    "demo": "parcel build ./index.html --out-dir ./demo"
   },
   "keywords": [
     "wheel of balance",
