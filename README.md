@@ -41,7 +41,7 @@ downloadButton.addEventListener('click', function (e) {
 ```
 
 
-<a href="https://pspr.to/?utm_source=whee-of-balance">
+<a href="https://pspr.to/?utm_source=wheel-of-balance">
   <img src="https://static.tildacdn.com/tild3334-6466-4734-b431-373632616332/logo_transparent.png"
        alt="Sponsored by Psprto" width="100" height="100">
 </a>
