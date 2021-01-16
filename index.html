@@ -9,8 +9,8 @@
 
 <body>
     <canvas id="canvas" width="500" height="500"></canvas>
-    <button onclick="javascript:wheel.clear()">Clear</button>
-    <button onclick="javascript:wheel.download()">Download</button>
+    <button id="clear">Clear</button>
+    <button id="download">Download</button>
 </body>
 
 <script>
@@ -35,6 +35,16 @@
 
     const wheel = new Wheel(canvas, config);
     wheel.draw();
+
+    const clearButton = document.getElementById("clear");
+    clearButton.addEventListener('click', function (e) {
+        wheel.clear();
+    });
+
+    const downloadButton = document.getElementById("download");
+    downloadButton.addEventListener('click', function (e) {
+        wheel.download();
+    });
 
 </script>
 
